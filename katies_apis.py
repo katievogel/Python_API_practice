@@ -21,8 +21,8 @@ repo = g.get_repo('hyperfiddle/electric')
 stargazers = repo.get_stargazers()
 for star in stargazers[:10]:
     records = {
-        'name:', star.name, 
-        'login:', star.login
+        'name': star.name, 
+        'login': star.login
     }
     print(records)
 
