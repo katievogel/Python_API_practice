@@ -13,9 +13,10 @@ def insert_stargazer(login, name):
             cur.execute(
                 "INSERT INTO katie_github.stargazers (login, name) VALUES (%s, %s)", 
                 (login, name))
+            print(f"Inserting {login}, {name}")
 
 def insert_all_stargazers(stargazers):
-    for star in stargazers[21:30]:
+    for star in stargazers:
         insert_stargazer(star.login, star.name)
 
 
