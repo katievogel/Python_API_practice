@@ -7,6 +7,8 @@ import secrets
 import psycopg2
 
 # write to db
+# it is cleaner to write a function to do one thing and call that function in another to do multiple
+# also ensure consistent functionality instead of trying to redo the same function each time
 def insert_stargazer(login, name):
     with psycopg2.connect(**db_config) as conn:
         with conn.cursor() as cur:
