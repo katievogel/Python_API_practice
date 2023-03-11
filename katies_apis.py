@@ -5,7 +5,10 @@ from github import Github
 import csv
 import secrets
 import psycopg2
+import tweepy
 
+
+g = None
 # write to db
 # it is cleaner to write a function to do one thing and call that function in another to do multiple
 # also ensure consistent functionality instead of trying to redo the same function each time
@@ -21,6 +24,29 @@ def insert_all_stargazers(stargazers):
     for star in stargazers:
         insert_stargazer(star.login, star.name)
 
+def push_event_to_email(push_event):
+    return push_event.payload['commits'][0]['author']['email']
+
+def users_first_push_event(user):
+    public_events = user.get_public_events()
+    for event in public_events:
+        if event.type == 'PushEvent':
+            return event
+
+def find_user_email(user_instance):
+    try:
+        return push_event_to_email(users_first_push_event(g.get_user(user_instance)))
+    except:
+        print(f"No push event found for {user_instance}.")
+
+def get_stargazer_email(stargazers):
+    return [find_user_email(user_instance.login) for user_instance in stargazers]
+    # for star in stargazers:
+    #     user = g.get_user(star.login)
+    #     event = users_first_push_event(user)
+    #     return push_event_to_email(event)
+        
+
 
 db_config = {
     'database' : 'katie_github', 
@@ -31,12 +57,13 @@ db_config = {
 
 def main():
     # set up github connection with auth token
+    global g # dirty hack, makes the below a global variable when it's run. not typical.
     g = Github(secrets.GITHUB_TOKEN)
 
     # get repos of user & check request data
     repo = g.get_repo('hyperfiddle/electric')
     stargazers = repo.get_stargazers()
-    insert_all_stargazers(stargazers)
+    # insert_all_stargazers(stargazers)
 
 if __name__ == "__main__": 
     main()
