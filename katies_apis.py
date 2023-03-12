@@ -24,20 +24,21 @@ def insert_all_stargazers(stargazers):
     for star in stargazers:
         insert_stargazer(star.login, star.name)
 
-def push_event_to_email(push_event):
-    return push_event.payload['commits'][0]['author']['email']
-
 def users_first_push_event(user):
     public_events = user.get_public_events()
     for event in public_events:
-        if event.type == 'PushEvent':
+        if event.type != 'PushEvent':
+            continue
+        else:
             return event
 
+def push_event_to_email(event):
+    return event.payload['commits'][0]['author']['email']
+
 def find_user_email(user_instance):
-    try:
-        return push_event_to_email(users_first_push_event(g.get_user(user_instance)))
-    except:
-        print(f"No push event found for {user_instance}.")
+    e = users_first_push_event(g.get_user(user_instance))
+    if e:
+        return push_event_to_email(e)
 
 def get_stargazer_email(stargazers):
     return [find_user_email(user_instance.login) for user_instance in stargazers]
