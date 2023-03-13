@@ -42,13 +42,7 @@ def find_user_email(user_instance):
 
 def get_stargazer_email(stargazers):
     return [find_user_email(user_instance.login) for user_instance in stargazers]
-    # for star in stargazers:
-    #     user = g.get_user(star.login)
-    #     event = users_first_push_event(user)
-    #     return push_event_to_email(event)
         
-
-
 db_config = {
     'database' : 'katie_github', 
     'user' : 'katievogel', 
