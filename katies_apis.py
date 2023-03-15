@@ -12,13 +12,13 @@ g = None
 # write to db
 # it is cleaner to write a function to do one thing and call that function in another to do multiple
 # also ensure consistent functionality instead of trying to redo the same function each time
-def insert_stargazer(login, name):
+def insert_stargazer(login, name, email):
     with psycopg2.connect(**db_config) as conn:
         with conn.cursor() as cur:
             cur.execute(
-                "INSERT INTO katie_github.stargazers (login, name) VALUES (%s, %s)", 
-                (login, name))
-            print(f"Inserting {login}, {name}")
+                "INSERT INTO katie_github.stargazers (login, name, email) VALUES (%s, %s, %s)", 
+                (login, name, email))
+            print(f"Inserting {login}, {name}, {email}")
 
 def insert_all_stargazers(stargazers):
     for star in stargazers:

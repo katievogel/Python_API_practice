@@ -1,4 +1,7 @@
+DROP SCHEMA IF EXISTS katie_github;
+
 CREATE SCHEMA katie_github;
+DROP TABLE IF EXISTS katie_github.stargazers;
 
 CREATE TABLE katie_github.stargazers (
     id SERIAL PRIMARY KEY,
