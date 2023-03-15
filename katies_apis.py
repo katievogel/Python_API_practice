@@ -22,7 +22,7 @@ def insert_stargazer(login, name, email):
 
 def insert_all_stargazers(stargazers):
     for star in stargazers:
-        insert_stargazer(star.login, star.name)
+        insert_stargazer(star.login, star.name, find_user_email(star.login))
 
 def users_first_push_event(user):
     public_events = user.get_public_events()
@@ -33,7 +33,10 @@ def users_first_push_event(user):
             return event
 
 def push_event_to_email(event):
-    return event.payload['commits'][0]['author']['email']
+    try:
+        return event.payload['commits'][0]['author']['email']
+    except:
+        return None
 
 def find_user_email(user_instance):
     e = users_first_push_event(g.get_user(user_instance))
@@ -58,7 +61,7 @@ def main():
     # get repos of user & check request data
     repo = g.get_repo('hyperfiddle/electric')
     stargazers = repo.get_stargazers()
-    # insert_all_stargazers(stargazers)
+    insert_all_stargazers(stargazers)
 
 if __name__ == "__main__": 
     main()
